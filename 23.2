@@ -1,10 +1,31 @@
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
 import folium
-m = folium.Map(location=[10.761072439454537, 106.66835687207939], zoom_start=13)
-folium.Marker([10.761072439454537, 106.66835687207939], popup="UEH cơ sở B: một cơ sở của Đại học Kinh tế TP.HCM, nơi học tập và tổ chức giảng dạy cho sinh viên.", tooltip="UEH cơ sở B", icon=folium.Icon(color='red')).add_to(m)
-folium.Marker([10.760726023509605, 106.66328562172818], popup="Sân vận động Thống Nhất: sân bóng lớn ở Quận 10, TP.HCM, sức chứa ~15.000–20.000 chỗ, dùng cho thi đấu và sự kiện.", tooltip="Sân vận động Thống Nhất").add_to(m)
-folium.Marker([10.75551475302351, 106.66444974409494], popup="Bệnh viện Đại học Y Dược TP.HCM: bệnh viện đa khoa lớn, trực thuộc Trường ĐH Y Dược TP.HCM, nổi bật về khám chữa bệnh và đào tạo y khoa.", tooltip="Bệnh viện Đại học Y Dược TP.HCM").add_to(m)
-folium.Marker([10.76362747604635, 106.66837671328459], popup="Văn phòng Kinh tế và Văn hóa Đài Bắc tại TP.HCM: cơ quan đại diện của Đài Loan tại TP.HCM, phụ trách quan hệ kinh tế, văn hóa và hỗ trợ công dân.", tooltip="Văn phòng Kinh tế và Văn hóa Đài Bắc tại TP.HCM").add_to(m)
-folium.Marker([10.759762142328618, 106.6710024067824], popup="Nhà xe Võ Cúc Phương: nhà xe vận tải hành khách, chuyên chạy tuyến liên tỉnh, chủ yếu khu vực Tây Nguyên – TP.HCM.", tooltip="Nhà xe Võ Cúc Phương").add_to(m)
-folium.Marker([10.757967737188679, 106.6733758874058], popup="Khách sạn Windsor Plaza: khách sạn 5 sao lớn tại TP.HCM, nổi bật với dịch vụ cao cấp, nhà hàng và trung tâm hội nghị.", tooltip="Khách sạn Windsor Plaza").add_to(m)
-folium.Marker([10.766399354966646, 106.67617466327223], popup="Đường Ẩm Thực Hồ Thị Kỷ: khu phố ẩm thực nổi tiếng, tập trung nhiều món ăn vặt và đặc sản giá rẻ, hoạt động nhộn nhịp về đêm.", tooltip="Đường Ẩm Thực Hồ Thị Kỷ").add_to(m)
+addresses = [
+    "Chợ Bến Thành, TP.HCM",
+    "Landmark 81, TP.HCM",
+    "Sân bay Tân Sơn Nhất, TP.HCM",
+    "Nhà thờ Đức Bà, TP.HCM",
+    "Dinh Độc Lập, TP.HCM",
+    "Bitexco, TP.HCM",
+    "Đầm sen, TP.HCM",
+    "Công viên Tao Đàn, TP.HCM",
+    "Đầm sen, TP.HCM",
+    "Aeon Mall - Tân Phú, TP.HCM",
+    "Suối tiên, TP.HCM"
+]
+locations = []
+for addr in addresses:
+  location = geolocator.geocode(addr)
+  locations.append({
+                "address": addr,
+                "coords": (location.latitude, location.longitude)
+            })
+center_point = locations[3]["coords"]
+m = folium.Map(location=center_point, zoom_start=13)
+for loc in locations:
+    distance = geodesic(center_point, loc["coords"]).km
+    folium.Marker(location=loc["coords"], popup=f"Khoảng cách giữa {loc['address']} và Chợ Bến Thành: {distance:.2f} km", tooltip=f"{loc['address']}", icon=folium.Icon(color="blue")).add_to(m)
+    folium.PolyLine([center_point, loc["coords"]], color="green").add_to(m)
+folium.Marker(location=center_point, popup="Điểm trung tâm", tooltip="Chợ Bến Thành, TP.HCM", icon=folium.Icon(color="red")).add_to(m)
 m
