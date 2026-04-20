@@ -1,0 +1,13 @@
+import folium
+import numpy as np
+from folium.plugins import HeatMap
+np.random.seed(42)
+center= (10.818592083930417, 106.65667529428089)
+data = []
+for _ in range(100):
+    lat = center[0] + np.random.normal(0, 0.01)
+    lon = center[1] + np.random.normal(0, 0.01)
+    data.append([lat, lon])
+m = folium.Map(location=center, zoom_start=13)
+HeatMap(data).add_to(m)
+m
