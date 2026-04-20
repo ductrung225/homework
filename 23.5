@@ -1,0 +1,26 @@
+import folium
+import numpy as np
+from geopy.distance import geodesic
+center = (10.867553807035067, 106.80334308283472)
+m = folium.Map(location=center, zoom_start=13)
+folium.Circle(center, radius=3000, color='green', fill=True, popup="3 km").add_to(m)
+folium.Circle(center, radius=5000, color='orange', fill=True, popup="5 km").add_to(m)
+folium.Circle(center, radius=10000, color='red', fill=True, popup="10 km").add_to(m)
+np.random.seed(42)
+customers = []
+for _ in range(50):
+    lat = center[0] + np.random.uniform(-0.1, 0.1)
+    lon = center[1] + np.random.uniform(-0.1, 0.1)
+    customers.append((lat, lon))
+for cust in customers:
+    dist = geodesic(center, cust).km
+    if dist <= 3:
+        color = 'green'
+    elif dist <= 5:
+        color = 'orange'
+    elif dist <= 10:
+        color = 'red'
+    else:
+        color = 'gray'   
+    folium.Marker(location=cust, popup=f"{dist:.2f} km", icon=folium.Icon(color=color)).add_to(m)
+m
